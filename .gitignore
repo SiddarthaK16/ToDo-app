@@ -1,0 +1,183 @@
+# =========================
+# Python
+# =========================
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Python cache / build files
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+
+# =========================
+# Virtual Environments
+# =========================
+
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# =========================
+# Environment Variables / Secrets
+# =========================
+
+.env
+.env.*
+!.env.example
+
+# =========================
+# FastAPI / Uvicorn
+# =========================
+
+*.log
+logs/
+*.pid
+
+# =========================
+# Databases
+# =========================
+
+*.db
+*.sqlite
+*.sqlite3
+
+# =========================
+# Jupyter Notebook
+# =========================
+
+.ipynb_checkpoints/
+
+# =========================
+# VS Code
+# =========================
+
+.vscode/
+*.code-workspace
+
+# =========================
+# JetBrains / PyCharm
+# =========================
+
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# =========================
+# OS Files
+# =========================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+
+# Linux
+.directory
+.Trash-*
+
+# =========================
+# Python Packaging
+# =========================
+
+build/
+dist/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+wheels/
+
+# =========================
+# Testing
+# =========================
+
+.pytest_cache/
+.tox/
+.nox/
+
+# =========================
+# Type Checking
+# =========================
+
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# =========================
+# Documentation
+# =========================
+
+docs/_build/
+
+# =========================
+# Temporary Files
+# =========================
+
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.bak
+
+# =========================
+# Local Configuration
+# =========================
+
+*.local
+config.local.*
+settings.local.*
+
+# =========================
+# Coverage
+# =========================
+
+coverage.xml
+*.cover
+.coverage
+htmlcov/
+
+# =========================
+# Docker
+# =========================
+
+# Don't ignore Dockerfiles or docker-compose files.
+# Ignore local Docker overrides:
+docker-compose.override.yml
+
+# =========================
+# Secrets / Certificates
+# =========================
+
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# =========================
+# Generated Files
+# =========================
+
+generated/
+output/
+temp/
+tmp/
