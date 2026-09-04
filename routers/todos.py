@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException, Path, APIRouter
-from typing_extensions import Annotated
+from typing import Annotated
 from sqlalchemy.orm import Session
 from database import  SessionLocal
 from models import Todos

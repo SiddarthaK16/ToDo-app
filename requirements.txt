@@ -1,6 +1,11 @@
-sqlalchemy
 fastapi
 uvicorn
+sqlalchemy
 python-dotenv
 pydantic
 email-validator
+passlib
+bcrypt==4.0.1
+python-multipart
+python-jose[cryptography]
+starlette
