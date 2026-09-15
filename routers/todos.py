@@ -5,6 +5,7 @@ from database import  SessionLocal
 from models import Todos
 from starlette import status
 from pydantic import   BaseModel, Field
+from .auth import get_current_user
 
 
 
@@ -20,6 +21,7 @@ def get_db():
         db.close()
 
 db_dependency= Annotated[Session,Depends(get_db)]
+user_dependency= Annotated[dict,Depends(get_current_user)]
 
 class ToDoRequest(BaseModel):
     title: str = Field(..., min_length=2, max_length=100)
@@ -42,28 +44,46 @@ class ToDoRequest(BaseModel):
 
 
 @router.get("/",status_code=status.HTTP_200_OK)
-async def read_all(db: db_dependency):
-    return db.query(Todos).all()
+async def read_all(user: user_dependency,
+                   db: db_dependency):
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return db.query(Todos).filter(Todos.owner_id==user.get('id')).all()
 
 @router.get("/todo/{todo_id}", status_code=status.HTTP_200_OK)
-async def read_todo(db: db_dependency,todo_id: int = Path(gt=0)):
-    todo_model= db.query(Todos).filter(Todos.id == todo_id).first()  # .first() to save and enhance performance
+async def read_todo(user: user_dependency,
+                    db: db_dependency,todo_id: int = Path(gt=0)):
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    todo_model= db.query(Todos).filter(Todos.id == todo_id).filter(Todos.owner_id == user.get('id')).first()  # .first() to save and enhance performance
     if todo_model is not None:
         return todo_model
     raise HTTPException(status_code=404, detail="Todo not found")
 
 @router.post("/todo",status_code=status.HTTP_201_CREATED)
-async def create_todo(db: db_dependency, todo_request: ToDoRequest):
-    todo_model=Todos(**todo_request.model_dump())
+async def create_todo(user: user_dependency,
+                      db: db_dependency, todo_request: ToDoRequest):
+
+    if user is None:
+        raise HTTPException(status_code=400, detail="User not found")
+
+    todo_model=Todos(**todo_request.model_dump(), owner_id=user.get('id'))
     db.add(todo_model)  #to telling db we are going to add smt into db
     db.commit()
 
 @router.put("/todo/{todo_id}",status_code=status.HTTP_204_NO_CONTENT)
-async def update_todo(db: db_dependency,
+async def update_todo(user: user_dependency,
+                      db: db_dependency,
                       todo_request: ToDoRequest,
                       todo_id: int = Path(gt=0) ,
                       ):
-    todo_model= db.query(Todos).filter(Todos.id == todo_id).first()
+    if user is None:
+        raise HTTPException(status_code=400, detail="User not found")
+
+    todo_model= db.query(Todos).filter(Todos.id == todo_id).filter(Todos.owner_id == user.get('id')).first()
+
     if todo_model is None:
         raise HTTPException(status_code=404, detail="ToDo not found")
 
@@ -76,9 +96,15 @@ async def update_todo(db: db_dependency,
     db.commit()
 
 @router.delete("/todo/{todo_id}",status_code=status.HTTP_204_NO_CONTENT)
-async def delete_todo(db: db_dependency,
+async def delete_todo(user: user_dependency,
+                      db: db_dependency,
                       todo_id: int = Path(gt=0)  ):
-    todo_model= db.query(Todos).filter(Todos.id == todo_id).first()
+
+    if user is None:
+        raise HTTPException(status_code=400, detail="User not found")
+
+    todo_model= db.query(Todos).filter(Todos.id == todo_id).filter(Todos.owner_id == user.get('id')).first()
+
     if todo_model is None:
         raise HTTPException(status_code=404, detail="ToDo not found")
     db.delete(todo_model)
