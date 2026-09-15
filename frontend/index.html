@@ -1,0 +1,971 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TodoFlow 🚀</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f6fb;
+            color: #1e293b;
+        }
+
+        header {
+            background: #172033;
+            color: white;
+            padding: 22px 8%;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: 65px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: 2px solid #2563eb;
+            border-color: transparent;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .switch {
+            text-align: center;
+            margin-top: 20px;
+            color: #64748b;
+        }
+
+        .switch a {
+            color: #2563eb;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+            word-wrap: break-word;
+            font-size: 14px;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .dashboard {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .dashboard h1 {
+            margin-bottom: 25px;
+        }
+
+        .task-form {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .task-form input,
+        .task-form select {
+            margin-bottom: 10px;
+        }
+
+        .todo-card {
+            background: white;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border-left: 5px solid #2563eb;
+        }
+
+        .todo-card h3 {
+            margin-bottom: 8px;
+        }
+
+        .todo-card p {
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .logout {
+            width: auto;
+            padding: 10px 20px;
+            float: right;
+            margin-top: -45px;
+            background: #ef4444;
+        }
+
+        .logout:hover {
+            background: #dc2626;
+        }
+
+        .empty {
+            text-align: center;
+            color: #64748b;
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    TodoFlow 🚀
+</header>
+
+
+<!-- ================= AUTHENTICATION ================= -->
+
+<div id="authSection">
+
+    <!-- REGISTER -->
+
+    <div class="container" id="registerBox">
+
+        <h1>Create Account</h1>
+
+        <p class="subtitle">
+            Manage your tasks with FastAPI.
+        </p>
+
+        <div id="registerMessage" class="message"></div>
+
+        <form id="registerForm">
+
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="regUsername" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="regEmail" required>
+            </div>
+
+            <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="firstName" required>
+            </div>
+
+            <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="lastName" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="regPassword" required>
+            </div>
+
+            <div class="form-group">
+                <label>Role</label>
+
+                <select id="role" required>
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+
+            <button type="submit">
+                Register
+            </button>
+
+        </form>
+
+        <p class="switch">
+            Already have an account?
+            <a id="showLogin">Login</a>
+        </p>
+
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <div class="container hidden" id="loginBox">
+
+        <h1>Welcome Back 👋</h1>
+
+        <p class="subtitle">
+            Login to manage your tasks.
+        </p>
+
+        <div id="loginMessage" class="message"></div>
+
+        <form id="loginForm">
+
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="loginUsername" required>
+            </div>
+
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" required>
+            </div>
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+        <p class="switch">
+            Don't have an account?
+            <a id="showRegister">Register</a>
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ================= DASHBOARD ================= -->
+
+<div id="dashboardSection" class="dashboard hidden">
+
+    <button class="logout" id="logoutBtn">
+        Logout
+    </button>
+
+    <h1>
+        My Tasks 📝
+    </h1>
+
+    <div id="dashboardMessage" class="message"></div>
+
+
+    <!-- CREATE TODO -->
+
+    <div class="task-form">
+
+        <h2>Add New Task</h2>
+
+        <br>
+
+        <form id="todoForm">
+
+            <input
+                type="text"
+                id="todoTitle"
+                placeholder="Task title"
+                required
+            >
+
+            <input
+                type="text"
+                id="todoDescription"
+                placeholder="Task description"
+                required
+            >
+
+            <label>Priority</label>
+
+            <!-- 1 = HIGHEST PRIORITY -->
+            <!-- 10 = LOWEST PRIORITY -->
+
+            <select id="todoPriority" required>
+
+                <option value="1">
+                    1 - Highest 🔥
+                </option>
+
+                <option value="2">
+                    2 - Very High
+                </option>
+
+                <option value="3">
+                    3 - High
+                </option>
+
+                <option value="4">
+                    4 - Medium-High
+                </option>
+
+                <option value="5" selected>
+                    5 - Medium
+                </option>
+
+                <option value="6">
+                    6 - Medium-Low
+                </option>
+
+                <option value="7">
+                    7 - Low
+                </option>
+
+                <option value="8">
+                    8 - Very Low
+                </option>
+
+                <option value="9">
+                    9 - Minimal
+                </option>
+
+                <option value="10">
+                    10 - Lowest
+                </option>
+
+            </select>
+
+            <button type="submit">
+                Add Task
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <h2>My Todo List</h2>
+
+    <br>
+
+    <div id="todoList"></div>
+
+</div>
+
+
+<script>
+
+    // ===============================
+    // CONFIGURATION
+    // ===============================
+
+    const API_URL = "http://127.0.0.1:8000";
+
+    let accessToken = sessionStorage.getItem("accessToken");
+
+
+    const authSection =
+        document.getElementById("authSection");
+
+    const dashboardSection =
+        document.getElementById("dashboardSection");
+
+    const registerBox =
+        document.getElementById("registerBox");
+
+    const loginBox =
+        document.getElementById("loginBox");
+
+
+    // ===============================
+    // UTILITY FUNCTIONS
+    // ===============================
+
+    function showMessage(elementId, message, type = "error") {
+
+        const element =
+            document.getElementById(elementId);
+
+        element.textContent = message;
+
+        element.className = "message " + type;
+
+        element.style.display = "block";
+
+    }
+
+
+    function hideMessage(elementId) {
+
+        document.getElementById(elementId)
+            .style.display = "none";
+
+    }
+
+
+    function showLoginPage() {
+
+        registerBox.classList.add("hidden");
+
+        loginBox.classList.remove("hidden");
+
+        hideMessage("registerMessage");
+
+    }
+
+
+    function showRegisterPage() {
+
+        loginBox.classList.add("hidden");
+
+        registerBox.classList.remove("hidden");
+
+        hideMessage("loginMessage");
+
+    }
+
+
+    function showDashboard() {
+
+        authSection.classList.add("hidden");
+
+        dashboardSection.classList.remove("hidden");
+
+        loadTodos();
+
+    }
+
+
+    function showAuth() {
+
+        authSection.classList.remove("hidden");
+
+        dashboardSection.classList.add("hidden");
+
+        showLoginPage();
+
+    }
+
+
+    // ===============================
+    // PAGE SWITCHING
+    // ===============================
+
+    document.getElementById("showLogin")
+        .addEventListener("click", showLoginPage);
+
+
+    document.getElementById("showRegister")
+        .addEventListener("click", showRegisterPage);
+
+
+    // ===============================
+    // REGISTER USER
+    // ===============================
+
+    document.getElementById("registerForm")
+        .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        hideMessage("registerMessage");
+
+
+        const userData = {
+
+            username:
+                document.getElementById("regUsername")
+                    .value.trim(),
+
+            email:
+                document.getElementById("regEmail")
+                    .value.trim(),
+
+            password:
+                document.getElementById("regPassword")
+                    .value,
+
+            first_name:
+                document.getElementById("firstName")
+                    .value.trim(),
+
+            last_name:
+                document.getElementById("lastName")
+                    .value.trim(),
+
+            role:
+                document.getElementById("role")
+                    .value,
+
+            is_active: true
+
+        };
+
+
+        try {
+
+            const response = await fetch(
+                `${API_URL}/auth/`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify(userData)
+                }
+            );
+
+
+            const data = await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.detail
+                        ? JSON.stringify(data.detail)
+                        : "Registration failed"
+                );
+
+            }
+
+
+            showMessage(
+                "registerMessage",
+                "Account created successfully! You can now login.",
+                "success"
+            );
+
+
+            document.getElementById("registerForm")
+                .reset();
+
+
+            setTimeout(showLoginPage, 1500);
+
+
+        } catch (error) {
+
+            showMessage(
+                "registerMessage",
+                error.message
+            );
+
+            console.error(
+                "Registration error:",
+                error
+            );
+
+        }
+
+    });
+
+
+    // ===============================
+    // LOGIN USER
+    // ===============================
+
+    document.getElementById("loginForm")
+        .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        hideMessage("loginMessage");
+
+
+        const username =
+            document.getElementById("loginUsername")
+                .value.trim();
+
+        const password =
+            document.getElementById("loginPassword")
+                .value;
+
+
+        // OAuth2PasswordRequestForm requires
+        // application/x-www-form-urlencoded data.
+
+        const formData = new URLSearchParams();
+
+        formData.append("username", username);
+
+        formData.append("password", password);
+
+
+        try {
+
+            const response = await fetch(
+                `${API_URL}/auth/token`,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded"
+                    },
+
+                    body: formData
+                }
+            );
+
+
+            const data = await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data.detail
+                        ? JSON.stringify(data.detail)
+                        : "Login failed"
+                );
+
+            }
+
+
+            accessToken = data.access_token;
+
+            sessionStorage.setItem(
+                "accessToken",
+                accessToken
+            );
+
+
+            showDashboard();
+
+
+        } catch (error) {
+
+            showMessage(
+                "loginMessage",
+                error.message
+            );
+
+            console.error(
+                "Login error:",
+                error
+            );
+
+        }
+
+    });
+
+
+    // ===============================
+    // LOAD TODOS
+    // ===============================
+
+    async function loadTodos() {
+
+        const todoList =
+            document.getElementById("todoList");
+
+        todoList.innerHTML =
+            "<p class='empty'>Loading tasks...</p>";
+
+
+        try {
+
+            const response = await fetch(
+                `${API_URL}/`,
+                {
+                    method: "GET",
+
+                    headers: {
+                        "Authorization":
+                            `Bearer ${accessToken}`
+                    }
+                }
+            );
+
+
+            if (response.status === 401) {
+
+                logout();
+
+                return;
+
+            }
+
+
+            const todos = await response.json();
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    todos.detail || "Unable to load tasks"
+                );
+
+            }
+
+
+            todoList.innerHTML = "";
+
+
+            if (todos.length === 0) {
+
+                todoList.innerHTML =
+                    "<p class='empty'>No tasks yet. Add your first task! 🎯</p>";
+
+                return;
+
+            }
+
+
+            todos.forEach(todo => {
+
+                const card =
+                    document.createElement("div");
+
+                card.className = "todo-card";
+
+
+                const title =
+                    document.createElement("h3");
+
+                title.textContent = todo.title;
+
+
+                const description =
+                    document.createElement("p");
+
+                description.textContent =
+                    todo.description;
+
+
+                const priority =
+                    document.createElement("p");
+
+                priority.textContent =
+                    "Priority: " + todo.priority;
+
+
+                const status =
+                    document.createElement("p");
+
+                status.textContent =
+                    todo.complete
+                        ? "Status: Completed ✅"
+                        : "Status: Pending ⏳";
+
+
+                card.appendChild(title);
+
+                card.appendChild(description);
+
+                card.appendChild(priority);
+
+                card.appendChild(status);
+
+
+                todoList.appendChild(card);
+
+            });
+
+
+        } catch (error) {
+
+            todoList.innerHTML =
+                "<p class='empty'>" +
+                error.message +
+                "</p>";
+
+            console.error(
+                "Load todos error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // ===============================
+    // CREATE TODO
+    // ===============================
+
+    document.getElementById("todoForm")
+        .addEventListener("submit", async function(event) {
+
+        event.preventDefault();
+
+        hideMessage("dashboardMessage");
+
+
+        const todoData = {
+
+            title:
+                document.getElementById("todoTitle")
+                    .value.trim(),
+
+            description:
+                document.getElementById("todoDescription")
+                    .value.trim(),
+
+            priority:
+                Number(
+                    document.getElementById("todoPriority")
+                        .value
+                ),
+
+            complete: false
+
+        };
+
+
+        try {
+
+            const response = await fetch(
+                `${API_URL}/todo`,
+                {
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json",
+
+                        "Authorization":
+                            `Bearer ${accessToken}`
+
+                    },
+
+                    body: JSON.stringify(todoData)
+                }
+            );
+
+
+            const data =
+                await response.json().catch(() => null);
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    data?.detail || "Could not create task"
+                );
+
+            }
+
+
+            showMessage(
+                "dashboardMessage",
+                "Task created successfully! 🎉",
+                "success"
+            );
+
+
+            document.getElementById("todoForm")
+                .reset();
+
+
+            loadTodos();
+
+
+        } catch (error) {
+
+            showMessage(
+                "dashboardMessage",
+                error.message
+            );
+
+            console.error(
+                "Create todo error:",
+                error
+            );
+
+        }
+
+    });
+
+
+    // ===============================
+    // LOGOUT
+    // ===============================
+
+    function logout() {
+
+        accessToken = null;
+
+        sessionStorage.removeItem("accessToken");
+
+        showAuth();
+
+    }
+
+
+    document.getElementById("logoutBtn")
+        .addEventListener("click", logout);
+
+
+    // ===============================
+    // AUTO LOGIN
+    // ===============================
+
+    if (accessToken) {
+
+        showDashboard();
+
+    } else {
+
+        showAuth();
+
+    }
+
+</script>
+
+</body>
+</html>

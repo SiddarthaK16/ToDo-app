@@ -28,10 +28,10 @@ class CreateUserRequest(BaseModel):
     email: EmailStr
     username: str
     password: str
-    is_active: bool
+    is_active: bool = True
     first_name: str
     last_name: str
-    role: str
+    role: str = "user"
 
 class Token(BaseModel):
     access_token: str
