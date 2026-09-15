@@ -1,6 +1,6 @@
 # 📝 To-Do App
 
-A simple **To-Do REST API** built with **FastAPI** and **SQLAlchemy**.
+A simple **To-Do App** built with **FastAPI** and **SQLAlchemy**.
 
 This project is being developed alongside my journey of learning FastAPI, backend development, and working with databases using SQLAlchemy.
 
