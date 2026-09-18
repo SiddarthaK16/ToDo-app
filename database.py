@@ -6,7 +6,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 POSTGRES_DATABASE_URI = os.getenv("DATABASE_URI")
-print(POSTGRES_DATABASE_URI)
 
 
 

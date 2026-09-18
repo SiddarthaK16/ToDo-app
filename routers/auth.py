@@ -2,7 +2,7 @@ import os
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
 from fastapi import  HTTPException, APIRouter, Depends
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from starlette import status
@@ -32,6 +32,7 @@ class CreateUserRequest(BaseModel):
     first_name: str
     last_name: str
     role: str = "user"
+    phone_number: str= Field(...,min_length=10,max_length=10)
 
 class Token(BaseModel):
     access_token: str
@@ -90,6 +91,7 @@ async def create_user(db: db_dependency,
         is_active=create_user_request.is_active,
         role=create_user_request.role,
         hashed_password=bcrypt_context.hash(create_user_request.password),
+        phone_number=create_user_request.phone_number
     )
 
     if create_user_model is None:
